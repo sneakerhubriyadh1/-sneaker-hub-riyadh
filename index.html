@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SNEAKER HUB RIYADH 🇸🇦</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f5f5;color:#111}
+header{background:#090909;color:#fff;padding:22px 16px;text-align:center;position:sticky;top:0;z-index:10}
+header h1{margin:0;font-size:25px}header p{margin:7px 0 0;color:#ccc}
+.hero{background:#fff;text-align:center;padding:32px 16px}.hero h2{margin:0 0 8px;font-size:30px}.hero p{color:#666}
+.grid{max-width:1100px;margin:24px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;padding:0 16px}
+.card,.order,.admin{background:#fff;border-radius:18px;box-shadow:0 4px 18px #00000012;overflow:hidden}
+.card img{width:100%;height:270px;object-fit:cover;display:block}.info{padding:16px}.info h3{margin:0 0 7px}.tag{display:inline-block;background:#eee;border-radius:20px;padding:6px 10px;font-size:13px}.price{font-size:21px;font-weight:700;margin:10px 0}
+button{width:100%;padding:13px;border:0;border-radius:11px;background:#111;color:#fff;font-weight:700;cursor:pointer}
+.order{max-width:700px;margin:30px auto;padding:20px}.order h2,.admin h2{margin-top:0}
+label{display:block;font-weight:700;margin:11px 0 5px}input,select,textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:9px;font-size:15px}
+footer{background:#090909;color:#fff;text-align:center;padding:25px;margin-top:35px}.small{color:#aaa;font-size:13px}
+.admin{max-width:1000px;margin:30px auto;padding:20px;display:none}.admin-row{border-top:1px solid #eee;padding:15px 0;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;align-items:end}
+.admin-actions{display:flex;gap:10px;margin-top:15px}.admin-actions button{width:auto;padding:11px 18px}.danger{background:#b00020}.secondary{background:#555}
+.notice{padding:12px;background:#f0f0f0;border-radius:10px;margin-bottom:12px}
+@media(max-width:700px){.admin-row{grid-template-columns:1fr 1fr}.admin-row button{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<header><h1 id="brand">SNEAKER HUB RIYADH 🇸🇦</h1><p>Comfort • Style • Elegance</p></header>
+<section class="hero"><h2>Premium Sneakers 👟</h2><p>Choose your favorite pair and order directly on WhatsApp.</p></section>
+<section class="grid" id="products"></section>
+
+<section class="order" id="order">
+<h2>🛒 Place Your Order</h2>
+<label>Product</label><select id="product"></select>
+<label>Size</label><select id="size"><option>40</option><option>41</option><option>42</option><option>43</option><option>44</option><option>45</option></select>
+<label>Color</label><input id="color" placeholder="Black / White">
+<label>Your Name</label><input id="name" placeholder="Your name">
+<label>Delivery Location</label><textarea id="location" rows="3" placeholder="Riyadh delivery location"></textarea>
+<button onclick="sendOrder()">SEND ORDER ON WHATSAPP 📲</button>
+</section>
+
+<section class="admin" id="admin">
+<h2>⚙️ Admin / Edit Products</h2>
+<div class="notice">এই প্যানেল থেকে নাম, দাম, color ও description পরিবর্তন করতে পারবেন। ছবি বদলাতে নতুন image file select করুন। <b>Save Changes</b> চাপুন।</div>
+<div id="editor"></div>
+<div class="admin-actions">
+<button onclick="saveProducts()">SAVE CHANGES</button>
+<button class="secondary" onclick="location.reload()">REFRESH</button>
+<button class="danger" onclick="logout()">CLOSE ADMIN</button>
+</div>
+</section>
+
+<footer>
+<b>SNEAKER HUB RIYADH 🇸🇦</b>
+<p>🚚 Riyadh-এর মধ্যে Delivery Available</p>
+<p>📲 +966 057 115 0141<br>+966 54 139 2101<br>+966 581173692</p>
+<p class="small">WhatsApp order number: +966 54 139 2101</p>
+</footer>
+
+<script>
+const WA="966541392101";
+const defaultProducts=[
+{name:"Black & White Classic Sneaker",price:"PRICE",color:"Black / White",desc:"Clean black upper with a white sole.",image:"product-1.jpeg"},
+{name:"All Black Comfort Sneaker",price:"PRICE",color:"Black",desc:"All-black style with a textured sole.",image:"product-2.jpeg"},
+{name:"White & Green Accent Sneaker",price:"PRICE",color:"White / Green",desc:"Clean white look with contrasting accents.",image:"product-3.jpeg"},
+{name:"Black & White Casual Sneaker",price:"PRICE",color:"Black / White",desc:"Smart black-and-white everyday style.",image:"product-4.jpeg"}
+];
+let products=JSON.parse(localStorage.getItem("shr_products")||"null")||defaultProducts;
+
+function render(){
+const grid=document.getElementById("products"), sel=document.getElementById("product");
+grid.innerHTML="";sel.innerHTML="";
+products.forEach((p,i)=>{
+grid.innerHTML+=`<article class="card"><img src="${p.image}" alt="${p.name}"><div class="info"><span class="tag">${p.color}</span><h3>${p.name}</h3><p>${p.desc}</p><div class="price">${p.price} SAR</div><button onclick="choose(${i})">ORDER NOW</button></div></article>`;
+sel.innerHTML+=`<option value="${i}">${p.name}</option>`;
+});
+}
+function choose(i){document.getElementById("product").value=i;document.getElementById("order").scrollIntoView({behavior:"smooth"});}
+function sendOrder(){
+const p=products[+document.getElementById("product").value],s=document.getElementById("size").value;
+const c=document.getElementById("color").value||p.color,n=document.getElementById("name").value||"Not specified",l=document.getElementById("location").value||"Not specified";
+const m=`🛍️ New Order - SNEAKER HUB RIYADH\n\n👟 Product: ${p.name}\n💰 Price: ${p.price} SAR\n📏 Size: ${s}\n🎨 Color: ${c}\n👤 Name: ${n}\n📍 Location: ${l}`;
+window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(m),"_blank");
+}
+function adminLogin(){
+const pass=prompt("Admin password:");
+if(pass==="1234"){document.getElementById("admin").style.display="block";document.getElementById("admin").scrollIntoView({behavior:"smooth"});renderEditor();}
+else if(pass!==null) alert("Wrong password.");
+}
+function renderEditor(){
+document.getElementById("editor").innerHTML=products.map((p,i)=>`
+<div class="admin-row">
+<div><label>Name</label><input id="n${i}" value="${escapeHtml(p.name)}"></div>
+<div><label>Price (SAR)</label><input id="p${i}" value="${escapeHtml(p.price)}"></div>
+<div><label>Color</label><input id="c${i}" value="${escapeHtml(p.color)}"></div>
+<div><label>Description</label><input id="d${i}" value="${escapeHtml(p.desc)}"></div>
+<div><label>Image</label><input id="i${i}" type="file" accept="image/*" onchange="readImage(event,${i})"></div>
+</div>`).join("");
+}
+function escapeHtml(s){return String(s).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+function readImage(e,i){
+const file=e.target.files[0];if(!file)return;
+const r=new FileReader();r.onload=()=>{products[i].image=r.result;};r.readAsDataURL(file);
+}
+function saveProducts(){
+products.forEach((p,i)=>{p.name=document.getElementById("n"+i).value;p.price=document.getElementById("p"+i).value;p.color=document.getElementById("c"+i).value;p.desc=document.getElementById("d"+i).value;});
+localStorage.setItem("shr_products",JSON.stringify(products));
+alert("Saved on this browser/device. Refreshing...");
+location.reload();
+}
+function logout(){document.getElementById("admin").style.display="none";}
+render();
+
+const adminLink=document.createElement("div");
+adminLink.innerHTML='<button style="position:fixed;right:12px;bottom:12px;width:auto;padding:8px 12px;opacity:.75;z-index:20">⚙️ Admin</button>';
+adminLink.firstElementChild.onclick=adminLogin;document.body.appendChild(adminLink);
+</script>
+</body>
+</html>
