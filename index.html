@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -7,12 +7,14 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f5f5f5;
   color:#111
 }
+
 header{
   background:#090909;
   color:#fff;
@@ -22,16 +24,31 @@ header{
   top:0;
   z-index:10
 }
-header h1{margin:0;font-size:25px}
-header p{margin:7px 0 0;color:#ccc}
+
+header h1{
+  margin:0;
+  font-size:25px
+}
+
+header p{
+  margin:7px 0 0;
+  color:#ccc
+}
 
 .hero{
   background:#fff;
   text-align:center;
   padding:32px 16px
 }
-.hero h2{margin:0 0 8px;font-size:30px}
-.hero p{color:#666}
+
+.hero h2{
+  margin:0 0 8px;
+  font-size:30px
+}
+
+.hero p{
+  color:#666
+}
 
 .grid{
   max-width:1100px;
@@ -53,11 +70,18 @@ header p{margin:7px 0 0;color:#ccc}
   width:100%;
   height:270px;
   object-fit:cover;
-  display:block
+  display:block;
+  background:#eee
 }
 
-.info{padding:16px}
-.info h3{margin:8px 0}
+.info{
+  padding:16px
+}
+
+.info h3{
+  margin:8px 0
+}
+
 .tag{
   display:inline-block;
   background:#eee;
@@ -65,6 +89,7 @@ header p{margin:7px 0 0;color:#ccc}
   padding:6px 10px;
   font-size:13px
 }
+
 .price{
   font-size:21px;
   font-weight:700;
@@ -91,7 +116,9 @@ button{
   box-shadow:0 4px 18px #00000012
 }
 
-.order h2{margin-top:0}
+.order h2{
+  margin-top:0
+}
 
 label{
   display:block;
@@ -125,7 +152,10 @@ footer{
   margin-top:35px
 }
 
-.small{color:#aaa;font-size:13px}
+.small{
+  color:#aaa;
+  font-size:13px
+}
 
 .loading{
   text-align:center;
@@ -143,7 +173,9 @@ footer{
 }
 
 @media(max-width:700px){
-  .grid{grid-template-columns:1fr}
+  .grid{
+    grid-template-columns:1fr
+  }
 }
 </style>
 </head>
@@ -235,7 +267,8 @@ async function loadProducts(){
         method:"GET",
         headers:{
           "apikey":SUPABASE_KEY,
-          "Authorization":"Bearer " + SUPABASE_KEY
+          "Authorization":"Bearer " + SUPABASE_KEY,
+          "Accept":"application/json"
         }
       }
     );
@@ -257,7 +290,7 @@ async function loadProducts(){
     status.className = "error";
 
     status.innerHTML =
-      "Products load হচ্ছে না। Supabase settings আবার check করতে হবে।";
+      "Products load হচ্ছে না। Supabase settings আবার check করতে হবে.";
 
   }
 
@@ -284,8 +317,16 @@ function renderProducts(){
 
   products.forEach((p,index)=>{
 
+    /*
+      IMAGE URL
+      Supabase থেকে image field নেওয়া হচ্ছে।
+    */
+
+    const imageUrl =
+      String(p.image || "").trim();
+
     const image =
-      p.image ||
+      imageUrl ||
       "https://via.placeholder.com/600x600?text=Sneaker";
 
     const sizes =
@@ -295,8 +336,9 @@ function renderProducts(){
       <article class="card">
 
         <img
-          src="${image}"
+          src="${escapeHtml(image)}"
           alt="${escapeHtml(p.name || "Sneaker")}"
+          onerror="this.onerror=null;this.src='https://via.placeholder.com/600x600?text=Image+Not+Found';"
         >
 
         <div class="info">
@@ -318,7 +360,7 @@ function renderProducts(){
           </p>
 
           <div class="price">
-            ${p.price || 0} SAR
+            ${escapeHtml(p.price || 0)} SAR
           </div>
 
           <button onclick="chooseProduct(${index})">
