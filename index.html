@@ -322,7 +322,7 @@ function renderProducts(){
       Supabase থেকে image field নেওয়া হচ্ছে।
     */
 
-  const image = "https://sgopbzqprghwfbyzkpre.supabase.co/storage/v1/object/public/products-images/EA%207.jpeg";
+  const image = String(p.imege_url || "").trim();
     const sizes =
       p.size || "40, 41, 42, 43, 44, 45";
 
