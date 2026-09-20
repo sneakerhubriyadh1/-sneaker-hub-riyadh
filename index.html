@@ -322,13 +322,7 @@ function renderProducts(){
       Supabase থেকে image field নেওয়া হচ্ছে।
     */
 
-    const imageUrl =
-      String(p.image || "").trim();
-
-    const image =
-      imageUrl ||
-      "https://via.placeholder.com/600x600?text=Sneaker";
-
+  const image = "https://sgopbzqprghwfbyzkpre.supabase.co/storage/v1/object/public/products-images/EA%207.jpeg";
     const sizes =
       p.size || "40, 41, 42, 43, 44, 45";
 
