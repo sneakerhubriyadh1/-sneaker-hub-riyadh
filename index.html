@@ -323,8 +323,11 @@ function renderProducts(){
     */
 
   const image = String(p.imege_url || "").trim();
-    const sizes =
-      p.size || "40, 41, 42, 43, 44, 45";
+   const sizes = String(p.sizes || "")
+  .split(/[|,]+/)
+  .map(x => x.trim())
+  .filter(Boolean)
+  .join(", ");
 
     grid.innerHTML += `
       <article class="card">
