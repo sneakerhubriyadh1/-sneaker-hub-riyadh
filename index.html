@@ -413,11 +413,10 @@ function updateSizes(){
   if(!product) return;
 
   const sizes =
-    String(product.size || "")
-    .split(",")
-    .map(x=>x.trim())
-    .filter(Boolean);
-
+  String(product.sizes || "")
+  .split(/[|,]+/)
+  .map(x => x.trim())
+  .filter(Boolean);
   sizes.forEach(size=>{
 
     sizeSelect.innerHTML +=
